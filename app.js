@@ -21,15 +21,35 @@ app.get('/', (req, res) => {
 
     let day = today.toLocaleDateString('en-US', options);
 
-    res.render('list', {day: day, newListItems: items});
+    res.render('list', {listTitle: day, newListItems: items});
 });
+
 
 app.post('/', (req, res) => {
     let item = req.body.newItem;
 
+    if (req.body.list === 'Work') {
+        workItems.push(item);
+        res.redirect('/work');
+    } else {
+        items.push(item);
+        res.redirect('/');
+    }
+
     items.push(item);
 
     res.redirect('/');
+});
+
+
+app.get('/work', (req, res) => {
+    res.render('list', {listTitle: 'Work List', newListItems: workItems});
+});
+
+app.post('/work', (req, res) => {
+    let item = req.body.newItem;
+    items.push(item);
+    res.redirect('/work');
 });
 
 app.listen(3000, () => {
